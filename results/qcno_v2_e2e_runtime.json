@@ -1,0 +1,1 @@
+{"R":8,"batch":16,"seq":64,"tokens":1024,"dense_materialized_ms":9.367448999910266,"implicit_fft_ms":50.55093250007303,"speedup_dense_over_implicit":0.185307145420052,"logits_relative_error":5.173470754016307e-07,"logits_max_abs_error":6.4373016357421875e-06}
