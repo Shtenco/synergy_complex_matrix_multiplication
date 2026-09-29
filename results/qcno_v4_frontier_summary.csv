@@ -1,0 +1,6 @@
+model,common_ppl,linear_compression_x,N4096_speed_proxy_x,status
+Dense teacher,6.322258521411578,1.0,1.0,reference
+Adaptive Q-CNO avgR=32,8.557880053899774,8.0,0.8338823901529248,quality branch
+Adaptive Q-CNO avgR=16,11.326688207289981,16.0,3.362132653384381,middle branch
+Adaptive Q-CNO avgR=8,15.52179947512549,32.0,9.696195699782796,speed branch
+Q-CNO avgR=8 + Householder K=4,13.789756960936016,21.3263911487,7.076515994601415,new Pareto point
