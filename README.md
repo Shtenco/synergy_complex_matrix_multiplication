@@ -1180,3 +1180,163 @@ downarrow
 
 Текущий проект уже закрыл несколько отдельных звеньев этой цепочки, но **не всю цепочку одновременно**. Именно это является главным открытым вопросом V11+.
 
+
+---
+
+# 36. V11 — Fast Learned Sparse Basis + Support-Preserving Complex Gates
+
+V11 был запущен как прямое продолжение verified V10 frontier. Цель — одновременно улучшить fast sparse basis, убрать fill-in и не ослаблять правила доказательности.
+
+## 36.1. Deep fast basis
+
+Новый shared orthogonal butterfly-like basis использует:
+
+- hidden width N=512;
+- 4 passes × 9 stages = **36 learned stages**;
+- 9,216 trainable angles;
+- fixed permutations between passes;
+- top-k sparse coding + exact inverse transform.
+
+После обучения retained energy:
+
+- k=64: **0.81748**;
+- k=96: **0.86823**;
+- k=128: **0.90387**.
+
+Common deterministic 40-batch evaluation:
+
+| Basis | k | PPL |
+|---|---:|---:|
+| Q-CNO baseline | 512 | **8.0046** |
+| PCA oracle | 128 | **8.1083** |
+| Householder-24 | 128 | 9.3596 |
+| old Butterfly-9 | 128 | 12.0550 |
+| **V11 Deep Butterfly-36** | **128** | **9.2396** |
+| V11 Deep Butterfly-36 | 96 | 9.9786 |
+| V11 Deep Butterfly-36 | 64 | 11.4586 |
+
+При k=128 V11 улучшает PPL относительно старого Butterfly-9 примерно на **23.35%** и впервые немного обходит Householder-24.
+
+PCA всё ещё лучше: V11 k=128 остаётся примерно на **13.95%** хуже PCA oracle по PPL.
+
+### Важная runtime-граница
+
+Текущая staged PyTorch-реализация basis ещё **не быстрее dense BLAS** при N=512:
+
+- dense 512×512 basis encode+decode, 240 states: ~2.87 ms в single-thread PyTorch;
+- V11 Deep Butterfly-36 encode+decode: ~17.58 ms.
+
+Следовательно сейчас доказано улучшение **структуры и качества**, но не wall-clock ускорение basis. Для честного speed claim нужен fused native kernel.
+
+## 36.2. Support-preserving complex gates
+
+Для active coefficients применяется локальный SU(2)-подобный gate:
+
+```
+a' = cos(theta) a + exp(i phi) sin(theta) b
+b' = -exp(-i phi) sin(theta) a + cos(theta) b
+```
+
+Главное свойство:
+
+```
+support_before = k
+support_after  = k
+```
+
+То есть V10 fill-in устранён: нет k→Rk→dense.
+
+После single-thread BLAS stress-test canonical exact same-operator результаты:
+
+| k | Gate layers | Measured speedup |
+|---:|---:|---:|
+| 128 | 4 | 2.19× |
+| 256 | 4 | 4.02× |
+| 512 | 4 | 6.48× |
+| 1024 | 4 | **6.83×** |
+| 1024 | 8 | 3.23× |
+
+Numerical relative error остаётся порядка 1e-7.
+
+Ранние 100×–300× значения этого microbenchmark не считаются canonical: stress-test показал, что они возникали в основном из-за thread/dispatch overhead многопоточного BLAS для небольших dense matrices.
+
+Таким образом:
+
+\[
+\boxed{\text{V11 support-preserving gate speedup} \approx 6.83\times\ \text{best measured canonical point}}
+\]
+
+а не 100×.
+
+## 36.3. Dual-basis Q-CNO
+
+Проверена гипотеза:
+
+\[
+W \approx Q_{r_1}+P Q_{r_2}P^T,\qquad r_1+r_2=r.
+\]
+
+При том же rank budget все 24 real teacher blocks улучшились, но mean Frobenius error снизился всего на **0.123%**.
+
+Это слишком мало для второго FFT branch, поэтому dual-basis branch не считается главным продолжением.
+
+## 36.4. Что V11 действительно закрыл
+
+Подтверждено:
+
+- fast-basis quality существенно улучшена относительно Butterfly-9;
+- V11 Deep Butterfly-36 немного обошёл Householder-24;
+- support-preserving complex gates гарантируют **k→k** без fill-in;
+- exact numerical parity gate network подтверждена;
+- dual-basis hypothesis практически опровергнута как сильный путь.
+
+Не закрыто:
+
+\[
+PPL_{student}/PPL_{teacher}\le1.05
+\]
+
+\[
+compression\ge8\times
+\]
+
+\[
+end\text{-}to\text{-}end\ wall\ clock\ge100\times
+\]
+
+Следовательно статус V11:
+
+```
+Fast learned sparse basis                 ✅ improved
+PCA-level fast quality                    ❌
+Support-preserving k→k gates              ✅ exact
+Gate kernel >1× vs dense active           ✅
+Gate kernel >=100× canonical              ❌
+Dual-basis same-budget improvement        ❌ only 0.123%
+PPL ratio <=1.05 vs teacher               ❌
+8× counted total compression              ⏳ V11.1
+100× end-to-end                           ❌
+1000× end-to-end                          ❌
+```
+
+## 36.5. V11.1 — следующая жёсткая точка
+
+Следующая версия должна быть **parameter-budget-neutral** и fused:
+
+1. сохранить 36-stage learned basis;
+2. удалить ровно 9 Q-CNO rank components, освобождая 9×1024 = **9,216 parameters** под basis;
+3. joint distillation: teacher logits + hidden states + Q-CNO factors + sparse basis;
+4. не декодировать hidden state обратно в dense representation между совместимыми операциями;
+5. применять support-preserving complex gates непосредственно в sparse coordinates;
+6. написать fused native kernel для butterfly encode/decode;
+7. отдельно сравнить dense BLAS, CSR/sparse-aware baseline и current Q-CNO.
+
+К V11.1 нельзя применять 100× claim, пока **одна и та же модель** одновременно не проходит quality, compression и end-to-end wall-clock gates.
+
+Primary evidence:
+
+- [V11 verified report](docs/qcno_v11_verified_report.md)
+- [V11 quality frontier](results/qcno_v11_verified_frontier.csv)
+- [V11 support-preserving gate benchmark](results/qcno_v11_support_gate_singlethread.csv)
+- [V11 dual-basis check](results/qcno_v11_dualbasis_fastcheck.csv)
+- [V11 deep-basis training curve](results/qcno_v11_deep_fast_basis_curve.csv)
