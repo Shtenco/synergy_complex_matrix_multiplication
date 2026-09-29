@@ -976,3 +976,207 @@ V9 shared QKV dictionary, V11 support-preserving gates, matrix-free Transformer,
 
 Repository: **Shtenco/synergy_complex_matrix_multiplication**  
 Research status: **ACTIVE / EXPERIMENTAL**
+
+
+---
+
+# 31. Снапшот публикации в GitHub
+
+На текущем подтверждённом снапшоте ветки `main` опубликовано **104 файла**:
+
+| Раздел | Количество | Назначение |
+|---|---:|---|
+| корень репозитория | 7 | README, requirements, manifest, inventories, contributing |
+| `src/` | **33** | полный набор уникальных текстовых экспериментальных исходников локального архива |
+| `docs/` | **12** | version reports, quantum target spec, verified reports |
+| `results/` | **46** | все уникальные raw CSV/JSON/TXT evidence files |
+| `figures_svg/` | **6** | GitHub-readable visual summaries |
+
+Локально исходно было 56 result-файлов. Десять из них были UI/display-копиями уже существующих CSV с альтернативными человекочитаемыми именами. Они намеренно **не продублированы** в GitHub. Все уникальные числовые результаты опубликованы.
+
+Все **50 относительных ссылок** этого README автоматически сверены с recursive Git tree; на момент публикации:
+
+[
+oxed{	ext{broken README links}=0}
+]
+
+---
+
+# 32. Канонический evidence index
+
+Если нужно перепроверить конкретное утверждение, первичный источник следует выбирать так:
+
+| Утверждение | Канонический evidence |
+|---|---|
+| V1 exact same-operator speed / numerical parity | `results/qcno_exact_operator_results.csv` |
+| ранний complex structured proxy | `results/qcno_benchmark_results.csv` |
+| idealized quantum logical scaling | `results/qcno_quantum_target_scaling.csv` |
+| V2 post-hoc rank sweep | `results/qcno_v2_distillation_results.csv` |
+| V2 native training | `results/qcno_v2_native_summary.csv` |
+| V2 large-N scaling | `results/qcno_v2_scaling_results.csv` |
+| V2 end-to-end dense-vs-implicit exactness | `results/qcno_v2_e2e_runtime.json` |
+| selective attention/MLP compression | `results/qcno_v2_selective_results.csv` |
+| V3 adaptive ranks | `results/qcno_v31_rank_allocations.json` |
+| V3 common evaluation | `results/qcno_v31_common_eval.json` |
+| V3/V6 global frontier | `results/qcno_v3_v6_frontier.csv` |
+| V4 speed/quality frontier | `results/qcno_v4_frontier_summary.csv` |
+| Householder speed | `results/qcno_v42_householder_speed_results.csv` |
+| V5 Monarch pre-kernel-optimization speed | `results/qcno_v53_speed_results.csv` |
+| V5 grouped-BMM speed | `results/qcno_v53_speed_bmm_results.csv` |
+| V5 token-width speed | `results/qcno_v53_tokenwidth_speed_results.csv` |
+| sensitivity allocation | `results/qcno_v56_sensitivity_alloc.json` |
+| MPO raw operator errors | `results/qcno_v6_mpo_operator_results.csv` |
+| V7 100× / 199× kernels | `results/qcno_v7_100x_matrix_benchmark.csv` |
+| V8 real checkpoint dedup | `results/qcno_v8_real_checkpoint_dedup.csv` |
+| V9 PQ initialization/recovery | `results/qcno_v9_fast_target_pre.csv`, `qcno_v9_G32K48_curve_part.csv` |
+| V10 early exact sparse kernel | `results/qcno_v10_state_kernel_benchmark.csv` |
+| V10 stress test | `results/qcno_v101_stress_benchmark.csv` |
+| constant 75% active-state regime | `results/qcno_v10_constant_fraction_speed.csv` |
+| coordinate hidden sparsity | `results/qcno_v101_common_eval_sparsity.csv` |
+| PCA state compression | `results/qcno_v102_pca_common40.csv` |
+| Hadamard | `results/qcno_v103_fast_basis_common40.csv` |
+| Householder-24 state basis | `results/qcno_v105_householder_common40.csv` |
+| shared PCA | `results/qcno_v106_shared_pca_common40.csv` |
+| support churn | `results/qcno_v106_support_churn.csv` |
+| итоговый verified state frontier | `results/qcno_v10_verified_frontier.csv` |
+
+---
+
+# 33. Какие числа можно цитировать корректно
+
+### Можно цитировать
+
+**44.32×**  
+как measured CPU speedup exact same structured Q-CNO operator при (N=4096), 1 layer, из V1.
+
+**140.00×**  
+как measured speedup exact Q-FFT-compatible operator против его dense materialization при (N=12288,T=4).
+
+**199.02×**  
+как measured speedup exact normalized/deduplicated bit-amplitude dictionary operator при (N=12288,T=8,K=64).
+
+**8× compression + PPL 8.0046**  
+как лучший подтверждённый adaptive Q-CNO quality point на common evaluation.
+
+**PCA k=128/512, PPL 8.1083**  
+как доказательство высокой информационной compressibility hidden state.
+
+**335.98× vs dense / 1.30× vs CSR**  
+как stress-tested exact sparse state kernel для фиксированного (k=384,R=4,N=8192).
+
+### Нельзя цитировать без квалификатора
+
+**199× Transformer speedup** — не доказан.
+
+**6445× Transformer speedup** — не доказан. Это ранний exact highly-sparse kernel point при (k=8).
+
+**1000× end-to-end** — не доказан.
+
+**quantum advantage** — не доказан.
+
+**PPL parity with dense teacher** — не достигнута.
+
+---
+
+# 34. Binary reproducibility boundary
+
+Текстовая часть исследования опубликована максимально полно в рамках текущего GitHub connector:
+
+- 33/33 source files;
+- 12/12 reports/specifications;
+- 46/46 unique result files;
+- visual summaries;
+- full local-archive manifest.
+
+Не опубликованы непосредственно только тяжёлые бинарные объекты:
+
+- PyTorch `.pt` checkpoints;
+- ZIP bundle snapshots;
+- исходные PNG, поскольку эквивалентные SVG опубликованы для GitHub-навигации.
+
+Причина техническая: доступный connector работает через GitHub Contents/Git Data API для текстовых payloads и не является Git LFS client или release-asset uploader.
+
+При этом бинарные объекты **не потеряны как provenance**: `MANIFEST.csv` содержит их:
+
+- точное имя;
+- размер в bytes;
+- SHA-256.
+
+Особенно важный checkpoint:
+
+`qcno_v31_adaptive_avg32_best_final.pt`
+
+локальный SHA-256:
+
+`049214001f67223dc878dc279bd06b7e38af51800a91d19ead7dd879d9c048ec`
+
+Teacher:
+
+`qcno_v3_teacher_d512.pt`
+
+SHA-256:
+
+`1fb70b4806fe19d90f998b6b500b0ea16cf134cf1a8ce14e56853f297b90fe06`
+
+---
+
+# 35. Research acceptance policy
+
+Чтобы будущая версия получила статус сильного результата, она должна проходить не одну, а всю цепочку:
+
+[
+	ext{mathematical identity / approximation}
+]
+
+[
+downarrow
+]
+
+[
+	ext{numerical error}
+]
+
+[
+downarrow
+]
+
+[
+	ext{kernel benchmark}
+]
+
+[
+downarrow
+]
+
+[
+	ext{sparse-aware baseline}
+]
+
+[
+downarrow
+]
+
+[
+	ext{end-to-end Transformer quality}
+]
+
+[
+downarrow
+]
+
+[
+	ext{end-to-end wall-clock}
+]
+
+[
+downarrow
+]
+
+[
+	ext{memory / storage / energy accounting}
+]
+
+Только после этого допустимо повышать статус claim.
+
+Текущий проект уже закрыл несколько отдельных звеньев этой цепочки, но **не всю цепочку одновременно**. Именно это является главным открытым вопросом V11+.
+
