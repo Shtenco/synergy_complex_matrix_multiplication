@@ -1,0 +1,2 @@
+G,K,mean_init_relerr,init_seconds,wall_seconds,pre_loss,pre_ppl,pre_acc,linear_param_compression_x,linear_storage_compression_x,pq_storage_MB
+16,64,0.8098580889333229,11.149994380999999,12.29017612399997,5.4309147000312805,228.35802901855317,0.1140625,9.6,8.930232558139535,2.6875
