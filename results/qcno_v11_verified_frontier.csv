@@ -1,0 +1,8 @@
+method,k,ppl,basis_cost,status
+Q-CNO baseline,512,8.00459893560532,none,verified
+PCA,128,8.108348077242795,O(N^2),quality oracle
+Householder-24,128,9.359623447340313,O(24N),verified V10
+Butterfly-9,128,12.05498405269207,O(N log N),verified V10
+V11 Deep Butterfly-36,128,9.239613741360655,O(4 N log N),verified V11
+V11 Deep Butterfly-36,96,9.978577428507393,O(4 N log N),verified V11
+V11 Deep Butterfly-36,64,11.458620077229305,O(4 N log N),verified V11
