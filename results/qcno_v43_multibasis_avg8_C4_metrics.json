@@ -1,0 +1,1 @@
+{"avg_rank":8.0,"rank_sum":192,"steps_this_run":35,"byte_ppl":17.279149525077212,"teacher_ppl":6.784904149643889,"ppl_ratio":2.54670502986901,"acc":0.23527777777777778,"params":455680,"structured_linear_params":294912,"dense_linear_params":6291456,"linear_compression_x":21.333333333333332,"min_rank":4,"max_rank":20,"seconds":6.68354156299938}
