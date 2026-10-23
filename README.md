@@ -1307,16 +1307,16 @@ end\text{-}to\text{-}end\ wall\ clock\ge100\times
 Следовательно статус V11:
 
 ```
-Fast learned sparse basis                 ✅ improved
-PCA-level fast quality                    ❌
-Support-preserving k→k gates              ✅ exact
-Gate kernel >1× vs dense active           ✅
-Gate kernel >=100× canonical              ❌
-Dual-basis same-budget improvement        ❌ only 0.123%
-PPL ratio <=1.05 vs teacher               ❌
-8× counted total compression              ⏳ V11.1
-100× end-to-end                           ❌
-1000× end-to-end                          ❌
+Fast learned sparse basis                  improved
+PCA-level fast quality                    
+Support-preserving k→k gates               exact
+Gate kernel >1× vs dense active           
+Gate kernel >=100× canonical              
+Dual-basis same-budget improvement         only 0.123%
+PPL ratio <=1.05 vs teacher               
+8× counted total compression               V11.1
+100× end-to-end                           
+1000× end-to-end                          
 ```
 
 ## 36.5. V11.1 — следующая жёсткая точка
