@@ -1,3 +1,11 @@
+<!-- SCIENTIFIC-V5-2026:START -->
+<img src="assets/readme/scientific-architecture-v5.svg" width="100%" alt="Complex Matrix / Q-CNO scientific architecture"/>
+
+**[Научно-техническое досье V5 — постановка, математика, provenance, риски и критерии проверки](docs/SCIENTIFIC_DOSSIER_V5_2026.md)**  
+**Статус документационного аудита:** EXPERIMENTAL. Старый README сохранён ниже без удаления исторических материалов.
+
+<!-- SCIENTIFIC-V5-2026:END -->
+
 # SYNERGY Complex Matrix Multiplication
 
 > **Исследовательский репозиторий по структурированным комплексным операторам, Q-CNO, квантово-вдохновлённым представлениям, дедупликации весов, Product-Quantized dictionaries и matrix-free sparse state machines.**
